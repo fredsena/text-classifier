@@ -2,7 +2,7 @@
 import streamlit as st 
 import pandas as pd
 import spacy
-import en_core_web_lg
+import en_core_web_md
 
 
 def process_data(raw_text):
@@ -33,7 +33,7 @@ def classify_text(text):
     return df_doc_topics.sort_values(by='Similarity_Score', ascending=False).head(5)
 
 #nlp_lg = spacy.load("en_core_web_md")
-nlp_lg = en_core_web_lg.load()
+nlp_lg = en_core_web_md.load()
 
 df_topics = pd.DataFrame()
 df_topics = pd.read_csv('data/topics.csv')
