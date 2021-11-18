@@ -13,8 +13,9 @@ def get_spacy_chunky_text(original_text):
     doc = nlp_lg(original_text)    
     chunk_text = ''
     
-    for chunk in doc.noun_chunks:    
-        chunk_text += chunk.root.text.lower().strip() + ' '        
+    for chunk in doc.noun_chunks:
+        if len(chunk.root.text.lower().strip()) > 3:    
+            chunk_text += chunk.root.text.lower().strip() + ' '        
 
     return nlp_lg(chunk_text)
 
