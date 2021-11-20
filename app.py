@@ -1,9 +1,10 @@
-
 import streamlit as st 
 import pandas as pd
 import spacy
 import en_core_web_md
-
+import textacy
+import textacy.extract
+from textacy.extract import keyterms as kt
 
 def process_data(raw_text):
 	return classify_text(raw_text) 
@@ -18,6 +19,18 @@ def get_spacy_chunky_text(original_text):
             chunk_text += chunk.root.text.lower().strip() + ' '        
 
     return nlp_lg(chunk_text)
+
+
+
+def get_key_terms(text):
+    doc = nlp_lg(text)
+    result_rank = kt.textrank(doc, normalize="lemma", topn=5)
+    df_doc = pd.DataFrame()
+    for i, topic in enumerate(result_rank):    
+        df_doc.loc[i, 'Key terms'] = result_rank[i][0]
+        df_doc.loc[i, 'Score'] = result_rank[i][1]
+
+    return df_doc
 
 
 def classify_text(text):
@@ -43,8 +56,11 @@ topics_list = [nlp_lg(x) for x in df_topics['Topics']]
 st.title("Text classifier")    
 raw_text = st.text_area("Paste any text here and see the main topics related")
 
+
 if st.button('Execute'):
-    query_results = process_data(raw_text)                
+    query_results = process_data(raw_text)
+    key_terms_result = get_key_terms(raw_text)            
     with st.expander("Results", expanded=True):
         st.write(query_results)
+        st.write(key_terms_result)
 
